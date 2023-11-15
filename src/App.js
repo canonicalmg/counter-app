@@ -24,17 +24,26 @@ class App extends Component {
     const counters = [...this.state.counters];
     const index = counters.indexOf(counter);
     counters[index] = { ...counters[index] };
-    counters[index].value--;
+  
+    // Don't let the user have negative values
+    if (counters[index].value > 1) {
+      counters[index].value--;
+    }
+  
     this.setState({ counters });
   };
+  
 
   handleReset = () => {
-    const counters = this.state.counters.map((c) => {
+    // Directly mutating the state (common mistake)
+    this.state.counters.forEach(c => {
       c.value = 0;
-      return c;
     });
-    this.setState({ counters });
+  
+    // State is mutated directly, but React may not recognize this change
+    this.setState({ counters: this.state.counters });
   };
+  
 
   handleDelete = (counterId) => {
     const counters = this.state.counters.filter((c) => c.id !== counterId);
